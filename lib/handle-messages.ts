@@ -1,7 +1,7 @@
-import type {
+import {
   AssistantThreadStartedEvent,
   GenericMessageEvent,
-} from "@slack/web-api";
+} from "./types";
 import { client, getThread, updateStatusUtil } from "./slack-utils";
 import { generateResponse } from "./generate-response";
 
@@ -50,24 +50,34 @@ export async function handleNewAssistantMessage(
   const updateStatus = updateStatusUtil(channel, thread_ts);
   updateStatus("is thinking...");
 
-  const messages = await getThread(channel, thread_ts, botUserId);
-  const result = await generateResponse(messages, updateStatus);
+  try {
+    const messages = await getThread(channel, thread_ts, botUserId);
+    const result = await generateResponse(messages, updateStatus);
 
-  await client.chat.postMessage({
-    channel: channel,
-    thread_ts: thread_ts,
-    text: result,
-    unfurl_links: false,
-    blocks: [
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: result,
+    await client.chat.postMessage({
+      channel: channel,
+      thread_ts: thread_ts,
+      text: result,
+      unfurl_links: false,
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: result,
+          },
         },
-      },
-    ],
-  });
+      ],
+    });
 
-  updateStatus("");
+    updateStatus("");
+  } catch (error) {
+    console.error("Error handling assistant message:", error);
+    updateStatus("");
+    await client.chat.postMessage({
+      channel: channel,
+      thread_ts: thread_ts,
+      text: `I'm sorry, I encountered an error while processing your request: ${error instanceof Error ? error.message : "Unknown error"}`,
+    });
+  }
 }

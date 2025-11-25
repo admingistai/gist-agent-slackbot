@@ -1,0 +1,31 @@
+[
+  {
+    "timestamp": "2025-11-25T13:06:18.017059",
+    "input_data": {
+      "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+      "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+      "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+      "model": {
+        "id": "claude-opus-4-5-20251101",
+        "display_name": "Opus 4.5"
+      },
+      "workspace": {
+        "current_dir": "/Users/tjmcgovern/ai-sdk-slackbot",
+        "project_dir": "/Users/tjmcgovern/ai-sdk-slackbot"
+      },
+      "version": "2.0.53",
+      "output_style": {
+        "name": "default"
+      },
+      "cost": {
+        "total_cost_usd": 0,
+        "total_duration_ms": 1109,
+        "total_api_duration_ms": 0,
+        "total_lines_added": 0,
+        "total_lines_removed": 0
+      },
+      "exceeds_200k_tokens": false
+    },
+    "status_line_output": "\u001b[36mOpus 4.5\u001b[0m | \u001b[34m\ud83d\udcc1 ai-sdk-slackbot\u001b[0m | \u001b[33m\ud83d\udce6 Node\u001b[0m | \u001b[90m5 files\u001b[0m | \u001b[32m\ud83c\udf3f starter +1\u001b[0m | \u001b[90m#407394d8\u001b[0m"
+  }
+]

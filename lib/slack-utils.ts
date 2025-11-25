@@ -77,7 +77,7 @@ export async function getThread(
   const { messages } = await client.conversations.replies({
     channel: channel_id,
     ts: thread_ts,
-    limit: 50,
+    limit: 10,
   });
 
   // Ensure we have messages

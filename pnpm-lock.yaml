@@ -11,6 +11,9 @@ importers:
       '@ai-sdk/openai':
         specifier: ^1.1.14
         version: 1.1.15(zod@3.24.2)
+      '@linear/sdk':
+        specifier: ^65.0.0
+        version: 65.0.0
       '@slack/web-api':
         specifier: ^7.0.2
         version: 7.8.0
@@ -27,6 +30,9 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
     devDependencies:
+      '@slack/types':
+        specifier: ^2.19.0
+        version: 2.19.0
       '@types/node':
         specifier: ^20.11.17
         version: 20.17.22
@@ -76,6 +82,15 @@ packages:
       zod:
         optional: true
 
+  '@graphql-typed-document-node/core@3.2.0':
+    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+
+  '@linear/sdk@65.0.0':
+    resolution: {integrity: sha512-RUu2SesoLP3pNVfJUqD6iv9X2K5hpFZON9MneP+r/Ss/VO1UmHuoj/9jH4AngfLsow1A89gyD+0We9d7cKqyHg==}
+    engines: {node: '>=12.x', yarn: 1.x}
+
   '@opentelemetry/api@1.9.0':
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
     engines: {node: '>=8.0.0'}
@@ -84,8 +99,8 @@ packages:
     resolution: {integrity: sha512-Wz7QYfPAlG/DR+DfABddUZeNgoeY7d1J39OCR2jR+v7VBsB8ezulDK5szTnDDPDwLH5IWhLvXIHlCFZV7MSKgA==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
 
-  '@slack/types@2.14.0':
-    resolution: {integrity: sha512-n0EGm7ENQRxlXbgKSrQZL69grzg1gHLAVd+GlRVQJ1NSORo0FrApR7wql/gaKdu2n4TO83Sq/AmeUOqD60aXUA==}
+  '@slack/types@2.19.0':
+    resolution: {integrity: sha512-7+QZ38HGcNh/b/7MpvPG6jnw7mliV6UmrquJLqgdxkzJgQEYUcEztvFWRU49z0x4vthF0ixL5lTK601AXrS8IA==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
   '@slack/web-api@7.8.0':
@@ -219,6 +234,10 @@ packages:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
 
+  graphql@15.10.1:
+    resolution: {integrity: sha512-BL/Xd/T9baO6NFzoMpiMD7YUZ62R6viR5tp/MULVEnbYJXZA//kRNW7J0j1w/wXArgL0sCxhDfK5dczSKn3+cg==}
+    engines: {node: '>= 10.x'}
+
   has-symbols@1.1.0:
     resolution: {integrity: sha512-1cDNdwJ2Jaohmb3sg4OmKaMBwuC48sYni5HUw2DvsC8LjGTLK9h+eb1X6RyuOHe4hT0ULCW68iomhjUoKUqlPQ==}
     engines: {node: '>= 0.4'}
@@ -237,6 +256,9 @@ packages:
   is-stream@2.0.1:
     resolution: {integrity: sha512-hFoiJiTl63nn+kstHGBtewWSKnQLpyb155KHheA1l39uvtO9nWIop1p3udqPcUd/xbF1VLMO4n7OI6p7RbngDg==}
     engines: {node: '>=8'}
+
+  isomorphic-unfetch@3.1.0:
+    resolution: {integrity: sha512-geDJjpoZ8N0kWexiwkX8F9NkTsXhetLPVbZFQ+JTW239QNOwvB0gniuR1Wc6f0AMTn7/mFGyXvHTifrCp/GH8Q==}
 
   json-schema@0.4.0:
     resolution: {integrity: sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA==}
@@ -322,6 +344,9 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
+  unfetch@4.2.0:
+    resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
+
   use-sync-external-store@1.4.0:
     resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
     peerDependencies:
@@ -380,18 +405,30 @@ snapshots:
     optionalDependencies:
       zod: 3.24.2
 
+  '@graphql-typed-document-node/core@3.2.0(graphql@15.10.1)':
+    dependencies:
+      graphql: 15.10.1
+
+  '@linear/sdk@65.0.0':
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0(graphql@15.10.1)
+      graphql: 15.10.1
+      isomorphic-unfetch: 3.1.0
+    transitivePeerDependencies:
+      - encoding
+
   '@opentelemetry/api@1.9.0': {}
 
   '@slack/logger@4.0.0':
     dependencies:
       '@types/node': 20.17.22
 
-  '@slack/types@2.14.0': {}
+  '@slack/types@2.19.0': {}
 
   '@slack/web-api@7.8.0':
     dependencies:
       '@slack/logger': 4.0.0
-      '@slack/types': 2.14.0
+      '@slack/types': 2.19.0
       '@types/node': 20.17.22
       '@types/retry': 0.12.0
       axios: 1.8.1
@@ -527,6 +564,8 @@ snapshots:
 
   gopd@1.2.0: {}
 
+  graphql@15.10.1: {}
+
   has-symbols@1.1.0: {}
 
   has-tostringtag@1.0.2:
@@ -540,6 +579,13 @@ snapshots:
   is-electron@2.2.2: {}
 
   is-stream@2.0.1: {}
+
+  isomorphic-unfetch@3.1.0:
+    dependencies:
+      node-fetch: 2.7.0
+      unfetch: 4.2.0
+    transitivePeerDependencies:
+      - encoding
 
   json-schema@0.4.0: {}
 
@@ -600,6 +646,8 @@ snapshots:
   typescript@5.8.2: {}
 
   undici-types@6.19.8: {}
+
+  unfetch@4.2.0: {}
 
   use-sync-external-store@1.4.0(react@19.0.0):
     dependencies:

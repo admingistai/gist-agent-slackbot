@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@ai-sdk/openai": "^1.1.14",
+    "@linear/sdk": "^65.0.0",
     "@slack/web-api": "^7.0.2",
     "@vercel/functions": "^2.0.0",
     "ai": "^4.1.46",
@@ -19,6 +20,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@slack/types": "^2.19.0",
     "@types/node": "^20.11.17",
     "typescript": "^5.3.3"
   }

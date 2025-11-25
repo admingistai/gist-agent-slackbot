@@ -1,4 +1,4 @@
-import { AppMentionEvent } from "@slack/web-api";
+import { AppMentionEvent } from "./types";
 import { client, getThread } from "./slack-utils";
 import { generateResponse } from "./generate-response";
 
@@ -38,15 +38,22 @@ export async function handleNewAppMention(
   const { thread_ts, channel } = event;
   const updateMessage = await updateStatusUtil("is thinking...", event);
 
-  if (thread_ts) {
-    const messages = await getThread(channel, thread_ts, botUserId);
-    const result = await generateResponse(messages, updateMessage);
-    updateMessage(result);
-  } else {
-    const result = await generateResponse(
-      [{ role: "user", content: event.text }],
-      updateMessage,
+  try {
+    if (thread_ts) {
+      const messages = await getThread(channel, thread_ts, botUserId);
+      const result = await generateResponse(messages, updateMessage);
+      updateMessage(result);
+    } else {
+      const result = await generateResponse(
+        [{ role: "user", content: event.text }],
+        updateMessage,
+      );
+      updateMessage(result);
+    }
+  } catch (error) {
+    console.error("Error handling app mention:", error);
+    updateMessage(
+      `I'm sorry, I encountered an error while processing your request:\n\n> ${error instanceof Error ? error.message : "Unknown error"}`
     );
-    updateMessage(result);
   }
 }

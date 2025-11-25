@@ -1,0 +1,9 @@
+[
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "startup"
+  }
+]

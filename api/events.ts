@@ -1,4 +1,9 @@
-import type { SlackEvent } from "@slack/web-api";
+import {
+  SlackEvent,
+  AppMentionEvent,
+  AssistantThreadStartedEvent,
+  GenericMessageEvent,
+} from "../lib/types";
 import {
   assistantThreadMessage,
   handleNewAssistantMessage,
@@ -25,11 +30,11 @@ export async function POST(request: Request) {
     const event = payload.event as SlackEvent;
 
     if (event.type === "app_mention") {
-      waitUntil(handleNewAppMention(event, botUserId));
+      waitUntil(handleNewAppMention(event as AppMentionEvent, botUserId));
     }
 
     if (event.type === "assistant_thread_started") {
-      waitUntil(assistantThreadMessage(event));
+      waitUntil(assistantThreadMessage(event as AssistantThreadStartedEvent));
     }
 
     if (
@@ -40,7 +45,7 @@ export async function POST(request: Request) {
       !event.bot_profile &&
       event.bot_id !== botUserId
     ) {
-      waitUntil(handleNewAssistantMessage(event, botUserId));
+      waitUntil(handleNewAssistantMessage(event as GenericMessageEvent, botUserId));
     }
 
     return new Response("Success!", { status: 200 });
