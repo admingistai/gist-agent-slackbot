@@ -11,13 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ai-sdk/openai": "^1.1.14",
+    "@ai-sdk/openai": "^2.0.73",
+    "@convex-dev/rag": "^0.6.1",
     "@linear/sdk": "^65.0.0",
     "@slack/web-api": "^7.0.2",
     "@vercel/functions": "^2.0.0",
-    "ai": "^4.1.46",
+    "ai": "^5.0.102",
+    "convex": "^1.29.3",
     "exa-js": "^1.4.10",
-    "zod": "^3.24.2"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@slack/types": "^2.19.0",

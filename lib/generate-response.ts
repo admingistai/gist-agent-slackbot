@@ -1,67 +1,86 @@
-import { CoreMessage, generateText, tool } from "ai";
+import { CoreMessage, generateText, stepCountIs } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { z } from "zod";
-import { exa } from "./utils";
 import {
   getLinearActivity,
   getIssueDetails,
   getTeamWorkload,
   searchIssues,
 } from "./linear-tools";
+import { searchWeb, scrapeUrl } from "./web-tools";
+import { searchKnowledgeBase, createIngestTool } from "./knowledge-tools";
+
+// Context type for user/channel information
+interface GenerateContext {
+  userId: string;
+  userName: string;
+  channelId: string;
+}
 
 export const generateResponse = async (
   messages: CoreMessage[],
   updateStatus?: (status: string) => void,
+  context?: GenerateContext,
 ) => {
+  // Create ingest tool with context if available
+  const ingestContent = context
+    ? createIngestTool(context.userId, context.userName, context.channelId)
+    : null;
+
   const { text } = await generateText({
     model: openai("gpt-4o-mini"),
     messages,
-    system: `You are a helpful Slack bot that can report on Linear activity.
-    - Keep responses concise and scannable for Slack
-    - Use bullet points for lists of issues
-    - Always include issue identifiers (like ENG-123) with their URLs
-    - When summarizing activity, group by: created, completed, in progress
-    - Format links for Slack using <url|text> syntax
-    - Current date: ${new Date().toISOString().split("T")[0]}`,
+    system: `You are Gist-Agent, an AI assistant for the Gist GEO team.
+
+Your capabilities:
+1. **Knowledge Base**: Search and ingest team knowledge (competitors, research, internal docs)
+2. **Linear**: Track issues and team workload
+3. **Web Search**: Find current information online
+
+IMPORTANT: Always check the knowledge base FIRST for questions about:
+- Competitors (AirOps, Jasper, etc.)
+- Industry research and reports
+- Internal company information
+
+When user says "ingest", "save", or "remember" with a URL, use ingestContent to save it.
+
+Guidelines:
+- Keep responses concise and scannable for Slack
+- Use bullet points for lists of issues
+- Always include issue identifiers (like ENG-123) with their URLs
+- When summarizing activity, group by: created, completed, in progress
+- Format links for Slack using <url|text> syntax
+- Current date: ${new Date().toISOString().split("T")[0]}`,
     tools: {
-      searchWeb: tool({
-        description: "Search the web for information",
-        parameters: z.object({
-          query: z.string().describe("The search query to use"),
-        }),
-        execute: async ({ query }) => {
-          const { results } = await exa.searchAndContents(query, {
-            numResults: 3,
-            text: { maxCharacters: 1000 },
-          });
-          return results;
-        },
-      }),
+      searchWeb,
+      scrapeUrl,
       getLinearActivity,
       getIssueDetails,
       getTeamWorkload,
       searchIssues,
+      searchKnowledgeBase,
+      ...(ingestContent && { ingestContent }),
     },
-    maxSteps: 5,
+    stopWhen: stepCountIs(7),
     onStepFinish: ({ toolCalls }) => {
-      if (updateStatus && toolCalls.length > 0) {
-        const toolCall = toolCalls[0];
+      const toolCall = toolCalls[0];
+      if (updateStatus && toolCall && "input" in toolCall) {
+        const input = toolCall.input as Record<string, unknown>;
         if (toolCall.toolName === "searchWeb") {
-          updateStatus(
-            `Searching web for "${(toolCall.args as { query: string }).query}"...`,
-          );
+          updateStatus(`Searching web for "${input.query}"...`);
+        } else if (toolCall.toolName === "scrapeUrl") {
+          updateStatus(`Reading content from ${input.url}...`);
         } else if (toolCall.toolName === "getLinearActivity") {
           updateStatus("Fetching Linear activity...");
         } else if (toolCall.toolName === "getIssueDetails") {
-          updateStatus(
-            `Looking up ${(toolCall.args as { issueId: string }).issueId}...`,
-          );
+          updateStatus(`Looking up ${input.issueId}...`);
         } else if (toolCall.toolName === "getTeamWorkload") {
-          updateStatus(
-            `Checking workload for team ${(toolCall.args as { teamKey: string }).teamKey}...`,
-          );
+          updateStatus(`Checking workload for team ${input.teamKey}...`);
         } else if (toolCall.toolName === "searchIssues") {
           updateStatus("Searching Linear issues...");
+        } else if (toolCall.toolName === "searchKnowledgeBase") {
+          updateStatus(`Searching knowledge base for "${input.query}"...`);
+        } else if (toolCall.toolName === "ingestContent") {
+          updateStatus(`Ingesting ${input.url}...`);
         }
       }
     },

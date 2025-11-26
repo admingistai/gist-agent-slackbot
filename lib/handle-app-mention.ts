@@ -41,14 +41,31 @@ export async function handleNewAppMention(
   try {
     if (thread_ts) {
       const messages = await getThread(channel, thread_ts, botUserId);
-      const result = await generateResponse(messages, updateMessage);
-      updateMessage(result);
+      console.log("Generating response for thread...");
+      const result = await generateResponse(messages, updateMessage, {
+        userId: event.user,
+        userName: event.user,
+        channelId: event.channel,
+      });
+      console.log(`Response generated, length: ${result.length}`);
+      console.log("Updating Slack message...");
+      await updateMessage(result);
+      console.log("Slack message updated");
     } else {
+      console.log("Generating response for new mention...");
       const result = await generateResponse(
         [{ role: "user", content: event.text }],
         updateMessage,
+        {
+          userId: event.user,
+          userName: event.user,
+          channelId: event.channel,
+        },
       );
-      updateMessage(result);
+      console.log(`Response generated, length: ${result.length}`);
+      console.log("Updating Slack message...");
+      await updateMessage(result);
+      console.log("Slack message updated");
     }
   } catch (error) {
     console.error("Error handling app mention:", error);
