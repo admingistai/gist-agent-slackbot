@@ -52,7 +52,11 @@ export async function handleNewAssistantMessage(
 
   try {
     const messages = await getThread(channel, thread_ts, botUserId);
-    const result = await generateResponse(messages, updateStatus);
+    const result = await generateResponse(messages, updateStatus, {
+      userId: event.user,
+      userName: event.user,
+      channelId: event.channel,
+    });
 
     await client.chat.postMessage({
       channel: channel,

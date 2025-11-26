@@ -6,7 +6,7 @@ import { linearClient } from "./linear-client";
 const getTimeframeBoundary = (timeframe: "today" | "yesterday" | "this_week"): Date => {
   const now = new Date();
   const boundary = new Date(now);
-  
+
   // Reset to start of day
   boundary.setHours(0, 0, 0, 0);
 
@@ -24,14 +24,32 @@ const getTimeframeBoundary = (timeframe: "today" | "yesterday" | "this_week"): D
   return boundary;
 };
 
+// Extract schemas for proper type inference
+const getLinearActivitySchema = z.object({
+  timeframe: z.enum(["today", "yesterday", "this_week"]).describe("The time period to check activity for"),
+  teamKey: z.string().optional().describe("The team key (e.g. 'ENG') to filter by"),
+  activityType: z.enum(["all", "created", "completed", "updated"]).default("all").describe("The type of activity to look for"),
+});
+
+const getIssueDetailsSchema = z.object({
+  issueId: z.string().describe("The issue identifier (e.g. 'ENG-123')"),
+});
+
+const getTeamWorkloadSchema = z.object({
+  teamKey: z.string().describe("The team key (e.g. 'ENG')"),
+});
+
+const searchIssuesSchema = z.object({
+  query: z.string().optional().describe("Text to search for in title/description"),
+  label: z.string().optional().describe("Filter by label name"),
+  assigneeEmail: z.string().optional().describe("Filter by assignee email"),
+});
+
+// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
 export const getLinearActivity = tool({
   description: "Get activity from Linear for a time period",
-  parameters: z.object({
-    timeframe: z.enum(["today", "yesterday", "this_week"]).describe("The time period to check activity for"),
-    teamKey: z.string().optional().describe("The team key (e.g. 'ENG') to filter by"),
-    activityType: z.enum(["all", "created", "completed", "updated"]).default("all").describe("The type of activity to look for"),
-  }),
-  execute: async ({ timeframe, teamKey, activityType }) => {
+  inputSchema: getLinearActivitySchema,
+  execute: async ({ timeframe, teamKey, activityType }: z.infer<typeof getLinearActivitySchema>) => {
     try {
       const boundary = getTimeframeBoundary(timeframe);
       const filter: any = {};
@@ -94,15 +112,14 @@ export const getLinearActivity = tool({
   },
 });
 
+// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
 export const getIssueDetails = tool({
   description: "Get detailed information about a specific Linear issue",
-  parameters: z.object({
-    issueId: z.string().describe("The issue identifier (e.g. 'ENG-123')"),
-  }),
-  execute: async ({ issueId }) => {
+  inputSchema: getIssueDetailsSchema,
+  execute: async ({ issueId }: z.infer<typeof getIssueDetailsSchema>) => {
     try {
       const issue = await linearClient.issue(issueId);
-      
+
       const [state, assignee, labels, comments] = await Promise.all([
         issue.state,
         issue.assignee,
@@ -137,12 +154,11 @@ export const getIssueDetails = tool({
   },
 });
 
+// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
 export const getTeamWorkload = tool({
   description: "Get workload overview for a team",
-  parameters: z.object({
-    teamKey: z.string().describe("The team key (e.g. 'ENG')"),
-  }),
-  execute: async ({ teamKey }) => {
+  inputSchema: getTeamWorkloadSchema,
+  execute: async ({ teamKey }: z.infer<typeof getTeamWorkloadSchema>) => {
     try {
       const team = await linearClient.team(teamKey);
       const [issues, activeCycle] = await Promise.all([
@@ -174,28 +190,25 @@ export const getTeamWorkload = tool({
   },
 });
 
+// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
 export const searchIssues = tool({
   description: "Search for issues by keyword, label, or assignee",
-  parameters: z.object({
-    query: z.string().optional().describe("Text to search for in title/description"),
-    label: z.string().optional().describe("Filter by label name"),
-    assigneeEmail: z.string().optional().describe("Filter by assignee email"),
-  }),
-  execute: async ({ query, label, assigneeEmail }) => {
+  inputSchema: searchIssuesSchema,
+  execute: async ({ query, label, assigneeEmail }: z.infer<typeof searchIssuesSchema>) => {
     const filter: any = {};
 
     if (label) filter.labels = { name: { eq: label } };
     if (assigneeEmail) filter.assignee = { email: { eq: assigneeEmail } };
 
     // Linear doesn't have a direct text search in the basic filter object in the same way for all fields,
-    // but `issues` query supports a `filter`. 
+    // but `issues` query supports a `filter`.
     // For full text search we might rely on the `linearClient.search` or client-side filtering.
     // The prompt suggests "Do client-side text search on title/description if query provided".
-    
-    // Let's fetch recent issues (limit 50) and filter client side if query exists, 
+
+    // Let's fetch recent issues (limit 50) and filter client side if query exists,
     // or if no other filter is provided, maybe just fetch recent.
     // If `query` is provided but no other filter, we should probably use `linearClient.issueSearch(query)`.
-    
+
     if (query && !label && !assigneeEmail) {
       // Use dedicated search if only query is present
       const results = await linearClient.issueSearch({ query });
@@ -220,8 +233,8 @@ export const searchIssues = tool({
 
     if (query) {
         const lowerQuery = query.toLowerCase();
-        results = results.filter(i => 
-            i.title.toLowerCase().includes(lowerQuery) || 
+        results = results.filter(i =>
+            i.title.toLowerCase().includes(lowerQuery) ||
             (i.description || "").toLowerCase().includes(lowerQuery)
         );
     }
