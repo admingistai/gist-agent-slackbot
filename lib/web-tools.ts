@@ -11,7 +11,6 @@ const scrapeUrlSchema = z.object({
   url: z.string().describe("The URL to scrape"),
 });
 
-// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
 export const searchWeb = tool({
   description: "Search the web for information",
   inputSchema: searchWebSchema,
@@ -24,7 +23,6 @@ export const searchWeb = tool({
   },
 });
 
-// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
 export const scrapeUrl = tool({
   description: "Scrape and read the content of a specific URL. Use this when the user provides a link to 'read', 'ingest', or 'summarize'.",
   inputSchema: scrapeUrlSchema,
