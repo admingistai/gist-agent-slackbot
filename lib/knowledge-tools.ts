@@ -155,6 +155,30 @@ export const createIngestTool = (
     },
   });
 
+// Delete entry schema
+const deleteEntrySchema = z.object({
+  url: z.string().url().describe("URL to delete from knowledge base"),
+});
+
+// Delete from knowledge base tool
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
+export const deleteFromKnowledgeBase = tool({
+  description: `Delete an article/entry from the knowledge base by URL.
+    Use when user says "delete", "remove", or "forget" with a URL.
+    Automatically finds which category the URL is in.`,
+  inputSchema: deleteEntrySchema,
+  execute: async ({ url }: z.infer<typeof deleteEntrySchema>) => {
+    try {
+      const result = await convex.action(api.delete.deleteByUrl, { url });
+      return result;
+    } catch (error) {
+      return {
+        error: `Delete failed: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
+  },
+});
+
 // Helper to suggest category based on content
 export function suggestCategory(
   content: string,

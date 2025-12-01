@@ -7,7 +7,7 @@ import {
   searchIssues,
 } from "./linear-tools";
 import { searchWeb, scrapeUrl } from "./web-tools";
-import { searchKnowledgeBase, listKnowledgeEntries, createIngestTool } from "./knowledge-tools";
+import { searchKnowledgeBase, listKnowledgeEntries, createIngestTool, deleteFromKnowledgeBase } from "./knowledge-tools";
 
 // Context type for user/channel information
 interface GenerateContext {
@@ -42,6 +42,7 @@ IMPORTANT: Always check the knowledge base FIRST for questions about:
 - Internal company information
 
 When user says "ingest", "save", or "remember" with a URL, use ingestContent to save it.
+When user says "delete", "remove", or "forget" with a URL, use deleteFromKnowledgeBase to remove it.
 
 Guidelines:
 - Keep responses concise and scannable for Slack
@@ -59,6 +60,7 @@ Guidelines:
       searchIssues,
       searchKnowledgeBase,
       listKnowledgeEntries,
+      deleteFromKnowledgeBase,
       ...(ingestContent && { ingestContent }),
     },
     stopWhen: stepCountIs(7),
@@ -84,6 +86,8 @@ Guidelines:
           updateStatus(`Ingesting ${input.url}...`);
         } else if (toolCall.toolName === "listKnowledgeEntries") {
           updateStatus("Listing knowledge base entries...");
+        } else if (toolCall.toolName === "deleteFromKnowledgeBase") {
+          updateStatus(`Deleting ${input.url} from knowledge base...`);
         }
       }
     },
