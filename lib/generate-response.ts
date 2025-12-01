@@ -7,7 +7,7 @@ import {
   searchIssues,
 } from "./linear-tools";
 import { searchWeb, scrapeUrl } from "./web-tools";
-import { searchKnowledgeBase, createIngestTool } from "./knowledge-tools";
+import { searchKnowledgeBase, listKnowledgeEntries, createIngestTool } from "./knowledge-tools";
 
 // Context type for user/channel information
 interface GenerateContext {
@@ -58,6 +58,7 @@ Guidelines:
       getTeamWorkload,
       searchIssues,
       searchKnowledgeBase,
+      listKnowledgeEntries,
       ...(ingestContent && { ingestContent }),
     },
     stopWhen: stepCountIs(7),
@@ -81,6 +82,8 @@ Guidelines:
           updateStatus(`Searching knowledge base for "${input.query}"...`);
         } else if (toolCall.toolName === "ingestContent") {
           updateStatus(`Ingesting ${input.url}...`);
+        } else if (toolCall.toolName === "listKnowledgeEntries") {
+          updateStatus("Listing knowledge base entries...");
         }
       }
     },

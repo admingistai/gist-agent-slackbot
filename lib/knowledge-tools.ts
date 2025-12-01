@@ -15,6 +15,15 @@ const searchKnowledgeSchema = z.object({
   limit: z.number().optional().default(5).describe("Number of results"),
 });
 
+const listEntriesSchema = z.object({
+  category: z
+    .enum(["competitors", "research", "internal", "general", "all"])
+    .optional()
+    .default("all")
+    .describe("Filter by category"),
+  limit: z.number().optional().default(20).describe("Number of results"),
+});
+
 const ingestContentSchema = z.object({
   url: z.string().url().describe("URL to ingest"),
   category: z
@@ -51,6 +60,47 @@ export const searchKnowledgeBase = tool({
     } catch (error) {
       return {
         error: `Knowledge search failed: ${error instanceof Error ? error.message : String(error)}`,
+      };
+    }
+  },
+});
+
+// List all entries in knowledge base
+const listEntriesSchemaInfer = listEntriesSchema;
+// @ts-expect-error - AI SDK v5 type instantiation too deep with zod
+export const listKnowledgeEntries = tool({
+  description: `List all articles/entries stored in the knowledge base.
+    Use this when user asks "what have you ingested", "list articles", "show knowledge base contents", etc.
+    Returns titles, URLs, categories, and who added them.`,
+  inputSchema: listEntriesSchema,
+  execute: async ({ category, limit }: z.infer<typeof listEntriesSchemaInfer>) => {
+    try {
+      const entries = await convex.query(api.search.listEntries, {
+        category,
+        limit,
+      });
+
+      if (!entries || entries.length === 0) {
+        return {
+          found: false,
+          message: "No articles have been ingested yet.",
+        };
+      }
+
+      return {
+        found: true,
+        count: entries.length,
+        entries: entries.map((e: any) => ({
+          title: e.title,
+          url: e.url,
+          category: e.namespace,
+          addedBy: e.addedBy,
+          addedAt: e.addedAt,
+        })),
+      };
+    } catch (error) {
+      return {
+        error: `Failed to list entries: ${error instanceof Error ? error.message : String(error)}`,
       };
     }
   },
