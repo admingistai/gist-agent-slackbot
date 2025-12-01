@@ -45,6 +45,7 @@ const searchIssuesSchema = z.object({
   assigneeEmail: z.string().optional().describe("Filter by assignee email"),
 });
 
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
 export const getLinearActivity = tool({
   description: "Get activity from Linear for a time period",
   inputSchema: getLinearActivitySchema,
@@ -111,6 +112,7 @@ export const getLinearActivity = tool({
   },
 });
 
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
 export const getIssueDetails = tool({
   description: "Get detailed information about a specific Linear issue",
   inputSchema: getIssueDetailsSchema,
@@ -152,6 +154,7 @@ export const getIssueDetails = tool({
   },
 });
 
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
 export const getTeamWorkload = tool({
   description: "Get workload overview for a team",
   inputSchema: getTeamWorkloadSchema,
@@ -187,6 +190,7 @@ export const getTeamWorkload = tool({
   },
 });
 
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
 export const searchIssues = tool({
   description: "Search for issues by keyword, label, or assignee",
   inputSchema: searchIssuesSchema,

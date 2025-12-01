@@ -32,6 +32,7 @@ const ingestContentSchema = z.object({
 });
 
 // Search knowledge base tool
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
 export const searchKnowledgeBase = tool({
   description: `Search the Gist knowledge base for information about competitors, research, or internal docs.
     Use this BEFORE searching the web for questions about:
@@ -66,6 +67,7 @@ export const searchKnowledgeBase = tool({
 
 // List all entries in knowledge base
 const listEntriesSchemaInfer = listEntriesSchema;
+// @ts-ignore - AI SDK v5 type instantiation too deep with zod
 export const listKnowledgeEntries = tool({
   description: `List all articles/entries stored in the knowledge base.
     Use this when user asks "what have you ingested", "list articles", "show knowledge base contents", etc.
@@ -110,6 +112,7 @@ export const createIngestTool = (
   userName: string,
   channelId: string
 ) =>
+  // @ts-ignore - AI SDK v5 type instantiation too deep with zod
   tool({
     description: `Save content to the knowledge base. Use when user says "ingest", "save", "remember", or "add to knowledge".
       Scrapes the URL, then stores it for future retrieval.`,
