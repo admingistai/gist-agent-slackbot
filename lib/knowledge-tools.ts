@@ -121,7 +121,7 @@ export const createIngestTool = (
       try {
         // Step 1: Scrape content using existing Exa
         const { results } = await exa.getContents([url], {
-          text: { maxCharacters: 4000 },
+          text: { maxCharacters: 50000 },  // ~10,000 words, full articles
         });
 
         if (!results || results.length === 0) {
