@@ -1,5 +1,7 @@
-import { convexClient } from "./convex-client";
+import { getConvexClient } from "./convex-client";
 import { api } from "../convex/_generated/api";
+
+const convexClient = getConvexClient();
 
 // Slack reaction event type
 export interface ReactionAddedEvent {
