@@ -10,6 +10,7 @@ import {
 } from "../lib/handle-messages";
 import { waitUntil } from "@vercel/functions";
 import { handleNewAppMention } from "../lib/handle-app-mention";
+import { handleReactionAdded, ReactionAddedEvent } from "../lib/handle-reaction";
 import { verifyRequest, getBotId } from "../lib/slack-utils";
 
 export async function POST(request: Request) {
@@ -25,6 +26,15 @@ export async function POST(request: Request) {
   await verifyRequest({ requestType, request, rawBody });
 
   try {
+    console.log("📥 Received Slack event:", payload.event?.type, "| Full payload keys:", Object.keys(payload));
+    if (payload.event) {
+      console.log("📋 Event details:", JSON.stringify({
+        type: payload.event.type,
+        subtype: payload.event.subtype,
+        user: payload.event.user,
+        channel: payload.event.channel || payload.event.item?.channel,
+      }, null, 2));
+    }
     const botUserId = await getBotId();
 
     const event = payload.event as SlackEvent;
@@ -46,6 +56,11 @@ export async function POST(request: Request) {
       event.bot_id !== botUserId
     ) {
       waitUntil(handleNewAssistantMessage(event as GenericMessageEvent, botUserId));
+    }
+
+    if (event.type === "reaction_added") {
+      console.log("🎯 Received reaction_added event:", JSON.stringify(event, null, 2));
+      waitUntil(handleReactionAdded(event as ReactionAddedEvent, botUserId));
     }
 
     return new Response("Success!", { status: 200 });
