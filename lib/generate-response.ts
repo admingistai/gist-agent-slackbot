@@ -50,7 +50,14 @@ Guidelines:
 - Always include issue identifiers (like ENG-123) with their URLs
 - When summarizing activity, group by: created, completed, in progress
 - Format links for Slack using <url|text> syntax
-- Current date: ${new Date().toISOString().split("T")[0]}`,
+- Current date: ${new Date().toISOString().split("T")[0]}
+
+When summarizing articles or reports:
+- Preserve strategic framing, not just tactical action items
+- Include specific cadences, metrics, or operational rhythms mentioned (e.g., "measure weekly, refresh quarterly")
+- Capture the "how to think about it" mindset, not just "what to do"
+- Note org-level or systems-level insights (e.g., "visibility is an operating system, not a campaign")
+- Include any calls to action or positioning statements from the source`,
     tools: {
       searchWeb,
       scrapeUrl,
