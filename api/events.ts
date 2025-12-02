@@ -16,6 +16,10 @@ import { verifyRequest, getBotId } from "../lib/slack-utils";
 export async function POST(request: Request) {
   const rawBody = await request.text();
   const payload = JSON.parse(rawBody);
+
+  // Log EVERY incoming request immediately
+  console.log("🚨 RAW EVENT:", payload.type, payload.event?.type);
+
   const requestType = payload.type as "url_verification" | "event_callback";
 
   // See https://api.slack.com/events/url_verification
