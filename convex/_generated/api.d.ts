@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as dashboard from "../dashboard.js";
 import type * as delete_ from "../delete.js";
 import type * as ingest from "../ingest.js";
 import type * as rag from "../rag.js";
@@ -20,6 +21,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  dashboard: typeof dashboard;
   delete: typeof delete_;
   ingest: typeof ingest;
   rag: typeof rag;
