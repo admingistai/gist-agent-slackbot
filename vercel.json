@@ -12,6 +12,5 @@
     "api/test-bot.ts": {
       "maxDuration": 60
     }
-  },
-  "outputDirectory": "dist"
+  }
 }
