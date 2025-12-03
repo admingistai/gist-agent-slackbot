@@ -278,6 +278,95 @@ export const getFeedbackList = query({
   },
 });
 
+export const getFeedbackByResponse = query({
+  args: {
+    sentiment: v.optional(
+      v.union(v.literal("positive"), v.literal("negative"), v.literal("neutral"), v.literal("all"))
+    ),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 50;
+    const sentiment = args.sentiment ?? "all";
+
+    // Get all feedback
+    const allFeedback = await ctx.db
+      .query("feedback")
+      .withIndex("by_timestamp")
+      .order("desc")
+      .take(limit * 10); // Fetch more to account for grouping
+
+    // Group by queryId
+    const groupedByQuery = new Map<string, typeof allFeedback>();
+    const noQueryIdFeedback: typeof allFeedback = [];
+
+    for (const f of allFeedback) {
+      if (f.queryId) {
+        const existing = groupedByQuery.get(f.queryId) || [];
+        existing.push(f);
+        groupedByQuery.set(f.queryId, existing);
+      } else {
+        noQueryIdFeedback.push(f);
+      }
+    }
+
+    // Build aggregated results
+    const aggregatedResults = await Promise.all(
+      Array.from(groupedByQuery.entries()).map(async ([queryId, feedbackItems]) => {
+        const positive = feedbackItems.filter((f) => f.sentiment === "positive").length;
+        const negative = feedbackItems.filter((f) => f.sentiment === "negative").length;
+        const neutral = feedbackItems.filter((f) => f.sentiment === "neutral").length;
+        const net = positive - negative;
+        const latestTimestamp = Math.max(...feedbackItems.map((f) => f.timestamp));
+
+        // Determine net sentiment
+        let netSentiment: "positive" | "negative" | "neutral";
+        if (net > 0) netSentiment = "positive";
+        else if (net < 0) netSentiment = "negative";
+        else netSentiment = "neutral";
+
+        // Get question/response from queryLogs
+        let question: string | undefined;
+        let response: string | undefined;
+
+        const queryLog = await ctx.db
+          .query("queryLogs")
+          .filter((q) => q.eq(q.field("queryId"), queryId))
+          .first();
+
+        if (queryLog) {
+          question = queryLog.messageContent;
+          response = queryLog.responseContent;
+        }
+
+        return {
+          queryId,
+          positive,
+          negative,
+          neutral,
+          total: feedbackItems.length,
+          net,
+          netSentiment,
+          timestamp: latestTimestamp,
+          question,
+          response,
+          users: feedbackItems.map((f) => f.userName || f.userId),
+        };
+      })
+    );
+
+    // Filter by sentiment if specified
+    const filtered = sentiment === "all"
+      ? aggregatedResults
+      : aggregatedResults.filter((r) => r.netSentiment === sentiment);
+
+    // Sort by most recent and limit
+    return filtered
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, limit);
+  },
+});
+
 export const recordFeedback = mutation({
   args: {
     messageTs: v.string(),
