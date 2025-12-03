@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "echo 'Build handled by Vercel'",
+    "build:full": "NODE_OPTIONS='--max-old-space-size=8192' tsc --noEmit false",
+    "start": "node dist/index.js",
+    "typecheck": "NODE_OPTIONS='--max-old-space-size=8192' tsc --noEmit"
   },
   "keywords": [],
   "author": "",

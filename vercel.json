@@ -8,6 +8,9 @@
   "functions": {
     "api/events.ts": {
       "maxDuration": 60
+    },
+    "api/test-bot.ts": {
+      "maxDuration": 60
     }
   },
   "outputDirectory": "dist"

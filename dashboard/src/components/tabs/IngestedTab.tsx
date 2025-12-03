@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
+import { api } from "../../../convex/_generated/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -58,7 +58,7 @@ export function IngestedTab() {
             <CategoryCardSkeleton />
           </>
         ) : categories.length > 0 ? (
-          categories.map(([category, count]) => (
+          categories.map(([category, count]: [string, unknown]) => (
             <Card key={category}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium capitalize">
@@ -66,7 +66,7 @@ export function IngestedTab() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{count}</div>
+                <div className="text-2xl font-bold">{String(count)}</div>
                 <p className="text-xs text-muted-foreground">URLs ingested</p>
               </CardContent>
             </Card>
@@ -116,7 +116,7 @@ export function IngestedTab() {
                   </TableCell>
                 </TableRow>
               ) : (
-                ingestionStats.recentEntries.map((entry) => (
+                ingestionStats.recentEntries.map((entry: typeof ingestionStats.recentEntries[number]) => (
                   <TableRow key={entry.id}>
                     <TableCell>
                       <span className="font-medium">

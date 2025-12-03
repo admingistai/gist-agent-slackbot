@@ -3,7 +3,9 @@ import {
   GenericMessageEvent,
 } from "./types";
 import { client, getThread, updateStatusUtil } from "./slack-utils";
-import { generateResponse } from "./generate-response";
+import { generateResponseWithMetrics } from "./generate-response";
+import { convexClient } from "./convex-client";
+import { api } from "../convex/_generated/api";
 
 export async function assistantThreadMessage(
   event: AssistantThreadStartedEvent,
@@ -50,31 +52,55 @@ export async function handleNewAssistantMessage(
   const updateStatus = updateStatusUtil(channel, thread_ts);
   updateStatus("is thinking...");
 
+  const queryId = `${channel}-${event.ts}-${Date.now()}`;
+
   try {
     const messages = await getThread(channel, thread_ts, botUserId);
-    const result = await generateResponse(messages, updateStatus, {
+    const result = await generateResponseWithMetrics(messages, updateStatus, {
       userId: event.user,
       userName: event.user,
       channelId: event.channel,
     });
 
-    await client.chat.postMessage({
+    const response = await client.chat.postMessage({
       channel: channel,
       thread_ts: thread_ts,
-      text: result,
+      text: result.text,
       unfurl_links: false,
       blocks: [
         {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: result,
+            text: result.text,
           },
         },
       ],
     });
 
     updateStatus("");
+
+    // Log query metrics and track bot message (async, don't await)
+    Promise.all([
+      convexClient.mutation(api.dashboard.logQuery, {
+        queryId,
+        userId: event.user,
+        channelId: channel,
+        promptTokens: result.usage.promptTokens,
+        completionTokens: result.usage.completionTokens,
+        totalTokens: result.usage.totalTokens,
+        model: result.model,
+        tools: result.toolsUsed,
+        responseTimeMs: result.responseTimeMs,
+      }),
+      response.ts && convexClient.mutation(api.dashboard.trackBotMessage, {
+        messageTs: response.ts,
+        channelId: channel,
+        threadTs: thread_ts,
+        queryId,
+        userId: event.user,
+      }),
+    ]).catch((err) => console.error("Failed to log metrics:", err));
   } catch (error) {
     console.error("Error handling assistant message:", error);
     updateStatus("");

@@ -16,18 +16,45 @@ interface GenerateContext {
   channelId: string;
 }
 
+// Response with usage metrics for tracking
+export interface GenerateResponseResult {
+  text: string;
+  usage: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
+  model: string;
+  toolsUsed: string[];
+  responseTimeMs: number;
+}
+
+const MODEL_ID = "gpt-4o-mini";
+
 export const generateResponse = async (
   messages: CoreMessage[],
   updateStatus?: (status: string) => void,
   context?: GenerateContext,
-) => {
+): Promise<string> => {
+  const result = await generateResponseWithMetrics(messages, updateStatus, context);
+  return result.text;
+};
+
+export const generateResponseWithMetrics = async (
+  messages: CoreMessage[],
+  updateStatus?: (status: string) => void,
+  context?: GenerateContext,
+): Promise<GenerateResponseResult> => {
+  const startTime = Date.now();
+  const toolsUsed: string[] = [];
+
   // Create ingest tool with context if available
   const ingestContent = context
     ? createIngestTool(context.userId, context.userName, context.channelId)
     : null;
 
-  const { text } = await generateText({
-    model: openai("gpt-4o-mini"),
+  const { text, usage } = await generateText({
+    model: openai(MODEL_ID),
     messages,
     system: `You are Gist-Agent, an AI assistant for the Gist GEO team.
 
@@ -73,33 +100,55 @@ When summarizing articles or reports:
     stopWhen: stepCountIs(7),
     onStepFinish: ({ toolCalls }) => {
       const toolCall = toolCalls[0];
-      if (updateStatus && toolCall && "input" in toolCall) {
-        const input = toolCall.input as Record<string, unknown>;
-        if (toolCall.toolName === "searchWeb") {
-          updateStatus(`Searching web for "${input.query}"...`);
-        } else if (toolCall.toolName === "scrapeUrl") {
-          updateStatus(`Reading content from ${input.url}...`);
-        } else if (toolCall.toolName === "getLinearActivity") {
-          updateStatus("Fetching Linear activity...");
-        } else if (toolCall.toolName === "getIssueDetails") {
-          updateStatus(`Looking up ${input.issueId}...`);
-        } else if (toolCall.toolName === "getTeamWorkload") {
-          updateStatus(`Checking workload for team ${input.teamKey}...`);
-        } else if (toolCall.toolName === "searchIssues") {
-          updateStatus("Searching Linear issues...");
-        } else if (toolCall.toolName === "searchKnowledgeBase") {
-          updateStatus(`Searching knowledge base for "${input.query}"...`);
-        } else if (toolCall.toolName === "ingestContent") {
-          updateStatus(`Ingesting ${input.url}...`);
-        } else if (toolCall.toolName === "listKnowledgeEntries") {
-          updateStatus("Listing knowledge base entries...");
-        } else if (toolCall.toolName === "deleteFromKnowledgeBase") {
-          updateStatus(`Deleting ${input.url} from knowledge base...`);
+      if (toolCall && "toolName" in toolCall) {
+        // Track tool usage
+        if (!toolsUsed.includes(toolCall.toolName)) {
+          toolsUsed.push(toolCall.toolName);
+        }
+
+        // Update status if callback provided
+        if (updateStatus && "input" in toolCall) {
+          const input = toolCall.input as Record<string, unknown>;
+          if (toolCall.toolName === "searchWeb") {
+            updateStatus(`Searching web for "${input.query}"...`);
+          } else if (toolCall.toolName === "scrapeUrl") {
+            updateStatus(`Reading content from ${input.url}...`);
+          } else if (toolCall.toolName === "getLinearActivity") {
+            updateStatus("Fetching Linear activity...");
+          } else if (toolCall.toolName === "getIssueDetails") {
+            updateStatus(`Looking up ${input.issueId}...`);
+          } else if (toolCall.toolName === "getTeamWorkload") {
+            updateStatus(`Checking workload for team ${input.teamKey}...`);
+          } else if (toolCall.toolName === "searchIssues") {
+            updateStatus("Searching Linear issues...");
+          } else if (toolCall.toolName === "searchKnowledgeBase") {
+            updateStatus(`Searching knowledge base for "${input.query}"...`);
+          } else if (toolCall.toolName === "ingestContent") {
+            updateStatus(`Ingesting ${input.url}...`);
+          } else if (toolCall.toolName === "listKnowledgeEntries") {
+            updateStatus("Listing knowledge base entries...");
+          } else if (toolCall.toolName === "deleteFromKnowledgeBase") {
+            updateStatus(`Deleting ${input.url} from knowledge base...`);
+          }
         }
       }
     },
   });
 
+  const responseTimeMs = Date.now() - startTime;
+
   // Convert markdown to Slack mrkdwn format
-  return text.replace(/\[(.*?)\]\((.*?)\)/g, "<$2|$1>").replace(/\*\*/g, "*");
+  const formattedText = text.replace(/\[(.*?)\]\((.*?)\)/g, "<$2|$1>").replace(/\*\*/g, "*");
+
+  return {
+    text: formattedText,
+    usage: {
+      promptTokens: usage?.promptTokens ?? 0,
+      completionTokens: usage?.completionTokens ?? 0,
+      totalTokens: usage?.totalTokens ?? 0,
+    },
+    model: MODEL_ID,
+    toolsUsed,
+    responseTimeMs,
+  };
 };

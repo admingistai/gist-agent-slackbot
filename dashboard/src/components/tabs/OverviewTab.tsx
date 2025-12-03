@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
+import { api } from "../../../convex/_generated/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -119,13 +119,13 @@ export function OverviewTab() {
           ) : (
             <div className="flex flex-wrap gap-3">
               {ingestionStats?.byCategory &&
-                Object.entries(ingestionStats.byCategory).map(([category, count]) => (
+                Object.entries(ingestionStats.byCategory).map(([category, count]: [string, unknown]) => (
                   <div
                     key={category}
                     className="flex items-center gap-2 rounded-lg border bg-muted/30 px-4 py-2.5 transition-colors hover:bg-muted/50"
                   >
                     <Badge variant="outline" className="font-medium">{category}</Badge>
-                    <span className="text-lg font-bold tabular-nums">{count}</span>
+                    <span className="text-lg font-bold tabular-nums">{String(count)}</span>
                     <span className="text-sm text-muted-foreground">URLs</span>
                   </div>
                 ))}
@@ -160,7 +160,7 @@ export function OverviewTab() {
             </div>
           ) : (
             <div className="space-y-1">
-              {ingestionStats?.recentEntries?.slice(0, 5).map((entry) => (
+              {ingestionStats?.recentEntries?.slice(0, 5).map((entry: NonNullable<typeof ingestionStats>["recentEntries"][number]) => (
                 <div
                   key={entry.id}
                   className="flex items-center justify-between rounded-lg px-2 py-3 transition-colors hover:bg-muted/50"

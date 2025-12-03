@@ -1,0 +1,58 @@
+[
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "PreCompact",
+    "trigger": "auto",
+    "custom_instructions": null
+  }
+]

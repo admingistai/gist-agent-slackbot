@@ -5,5 +5,75 @@
     "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
     "hook_event_name": "SessionStart",
     "source": "startup"
+  },
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "56eca0c6-ccae-4335-9f6b-79a8407394d8",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/56eca0c6-ccae-4335-9f6b-79a8407394d8.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "631fec5d-e335-4539-ba0f-9b4a28beb8de",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/631fec5d-e335-4539-ba0f-9b4a28beb8de.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "startup"
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "startup"
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "dcf1c21e-25aa-49c6-90ab-9505b7db415e",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/dcf1c21e-25aa-49c6-90ab-9505b7db415e.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "compact"
+  },
+  {
+    "session_id": "ac4db158-3553-4b7f-ab9d-fdcce6e5f97f",
+    "transcript_path": "/Users/tjmcgovern/.claude/projects/-Users-tjmcgovern-ai-sdk-slackbot/ac4db158-3553-4b7f-ab9d-fdcce6e5f97f.jsonl",
+    "cwd": "/Users/tjmcgovern/ai-sdk-slackbot",
+    "hook_event_name": "SessionStart",
+    "source": "startup"
   }
 ]

@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
+import { api } from "../../../convex/_generated/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -152,7 +152,7 @@ export function FeedbackTab() {
                   </TableCell>
                 </TableRow>
               ) : (
-                feedbackList.map((feedback) => (
+                feedbackList.map((feedback: typeof feedbackList[number]) => (
                   <TableRow key={feedback.id}>
                     <TableCell className="text-sm">
                       {formatDate(feedback.timestamp)}

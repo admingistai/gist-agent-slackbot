@@ -1,0 +1,10 @@
+{
+  "session_id": "ac4db158-3553-4b7f-ab9d-fdcce6e5f97f",
+  "prompts": [
+    "/openspec:archive we can archive the dashboard frontend. archive and prime yourself on the project @openspec/project.md ",
+    "/openspec:proposal I want to make an update to the frontend, I want it to be a sleek frontend that uses shadcn correctly with light and dark mode. look up best practices shadcn and nextjs react. [Image #1][Image #2] currently it looks amature ",
+    "approved",
+    "[Image #1] i dont see dashboard??",
+    "can you do it from here"
+  ]
+}

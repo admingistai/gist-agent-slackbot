@@ -1,5 +1,5 @@
 import { useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
+import { api } from "../../../convex/_generated/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -146,7 +146,7 @@ export function UsageTab() {
                   </TableCell>
                 </TableRow>
               ) : (
-                queryLogs.map((log) => (
+                queryLogs.map((log: typeof queryLogs[number]) => (
                   <TableRow key={log.id}>
                     <TableCell className="text-sm">
                       {formatDate(log.timestamp)}
@@ -167,7 +167,7 @@ export function UsageTab() {
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-wrap gap-1">
-                        {log.tools.map((tool) => (
+                        {log.tools.map((tool: string) => (
                           <Badge key={tool} variant="secondary" className="text-xs">
                             {tool}
                           </Badge>
