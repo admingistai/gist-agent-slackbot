@@ -4,6 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import {
   Table,
   TableBody,
   TableCell,
@@ -12,7 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { formatDate } from "@/lib/utils"
-import { ThumbsUp, ThumbsDown, Minus, MessageSquare } from "lucide-react"
+import { ThumbsUp, ThumbsDown, Minus, MessageSquare, ChevronDown } from "lucide-react"
 
 function StatCardSkeleton() {
   return (
@@ -161,52 +166,75 @@ export function FeedbackTab() {
                 </TableRow>
               ) : (
                 feedbackList.map((feedback: typeof feedbackList[number]) => (
-                  <TableRow key={feedback.id}>
-                    <TableCell className="text-sm">
-                      {formatDate(feedback.timestamp)}
-                    </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {feedback.userName || feedback.userId}
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-lg">
-                        {feedback.reaction === "+1" || feedback.reaction === "thumbsup"
-                          ? "👍"
-                          : feedback.reaction === "-1" || feedback.reaction === "thumbsdown"
-                          ? "👎"
-                          : `:${feedback.reaction}:`}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          feedback.sentiment === "positive"
-                            ? "success"
-                            : feedback.sentiment === "negative"
-                            ? "destructive"
-                            : "secondary"
-                        }
-                      >
-                        {feedback.sentiment}
-                      </Badge>
-                    </TableCell>
-                    <TableCell
-                      className="text-sm text-muted-foreground max-w-[250px]"
-                      title={feedback.question}
-                    >
-                      <span className="block truncate">
-                        {truncateText(feedback.question, 80)}
-                      </span>
-                    </TableCell>
-                    <TableCell
-                      className="text-sm text-muted-foreground max-w-[250px]"
-                      title={feedback.response}
-                    >
-                      <span className="block truncate">
-                        {truncateText(feedback.response, 80)}
-                      </span>
-                    </TableCell>
-                  </TableRow>
+                  <Collapsible key={feedback.id} asChild>
+                    <>
+                      <CollapsibleTrigger asChild>
+                        <TableRow className="cursor-pointer hover:bg-muted/50 group">
+                          <TableCell className="text-sm">
+                            {formatDate(feedback.timestamp)}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {feedback.userName || feedback.userId}
+                          </TableCell>
+                          <TableCell>
+                            <span className="text-lg">
+                              {feedback.reaction === "+1" || feedback.reaction === "thumbsup"
+                                ? "👍"
+                                : feedback.reaction === "-1" || feedback.reaction === "thumbsdown"
+                                ? "👎"
+                                : `:${feedback.reaction}:`}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant={
+                                feedback.sentiment === "positive"
+                                  ? "success"
+                                  : feedback.sentiment === "negative"
+                                  ? "destructive"
+                                  : "secondary"
+                              }
+                            >
+                              {feedback.sentiment}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground max-w-[250px]">
+                            <span className="block truncate">
+                              {truncateText(feedback.question, 80)}
+                            </span>
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground max-w-[250px]">
+                            <div className="flex items-center justify-between">
+                              <span className="block truncate flex-1">
+                                {truncateText(feedback.response, 80)}
+                              </span>
+                              <ChevronDown className="h-4 w-4 ml-2 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent asChild>
+                        <TableRow className="bg-muted/30 hover:bg-muted/30">
+                          <TableCell colSpan={6} className="p-4">
+                            <div className="space-y-3">
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Question</p>
+                                <p className="text-sm whitespace-pre-wrap">
+                                  {feedback.question || "No question recorded"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-xs font-medium text-muted-foreground mb-1">Response</p>
+                                <p className="text-sm whitespace-pre-wrap">
+                                  {feedback.response || "No response recorded"}
+                                </p>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      </CollapsibleContent>
+                    </>
+                  </Collapsible>
                 ))
               )}
             </TableBody>
