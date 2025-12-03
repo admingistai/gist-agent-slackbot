@@ -39,24 +39,36 @@ export const searchKnowledgeBase = tool({
     - Competitors (AirOps, Jasper, etc.)
     - Industry research and reports
     - Internal company information
-    Categories: competitors, research, internal, general, all`,
+    Categories: competitors, research, internal, general, all
+
+    This tool uses hybrid search (vector + title matching) to find relevant content.`,
   inputSchema: searchKnowledgeSchema,
   execute: async ({ query, category, limit }: z.infer<typeof searchKnowledgeSchema>) => {
     try {
-      const results = await convex.action(api.search.searchKnowledge, {
+      const response = await convex.action(api.search.searchKnowledge, {
         query,
         category,
         limit,
       });
 
+      // Handle new response format with searchMethod
+      const results = response?.results || response;
+      const searchMethod = response?.searchMethod || "unknown";
+
       if (!results || (Array.isArray(results) && results.length === 0)) {
         return {
           found: false,
           message: "No relevant information found in the knowledge base.",
+          searchMethod,
         };
       }
 
-      return { found: true, results };
+      return {
+        found: true,
+        results,
+        searchMethod,
+        resultCount: Array.isArray(results) ? results.length : 1,
+      };
     } catch (error) {
       return {
         error: `Knowledge search failed: ${error instanceof Error ? error.message : String(error)}`,
