@@ -1,7 +1,4 @@
 {
-  "installCommand": "pnpm install && cd dashboard && pnpm install",
-  "buildCommand": "cd dashboard && pnpm run build",
-  "outputDirectory": "dashboard/dist",
   "functions": {
     "api/events.ts": {
       "maxDuration": 60
@@ -9,11 +6,5 @@
     "api/test-bot.ts": {
       "maxDuration": 60
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*"
-    }
-  ]
+  }
 }
