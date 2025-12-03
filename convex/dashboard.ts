@@ -296,23 +296,21 @@ export const getFeedbackByResponse = query({
       .order("desc")
       .take(limit * 10); // Fetch more to account for grouping
 
-    // Group by queryId
-    const groupedByQuery = new Map<string, typeof allFeedback>();
-    const noQueryIdFeedback: typeof allFeedback = [];
+    // Group by queryId using plain object (more compatible with Convex runtime)
+    const groupedByQuery: Record<string, typeof allFeedback> = {};
 
     for (const f of allFeedback) {
       if (f.queryId) {
-        const existing = groupedByQuery.get(f.queryId) || [];
-        existing.push(f);
-        groupedByQuery.set(f.queryId, existing);
-      } else {
-        noQueryIdFeedback.push(f);
+        if (!groupedByQuery[f.queryId]) {
+          groupedByQuery[f.queryId] = [];
+        }
+        groupedByQuery[f.queryId].push(f);
       }
     }
 
     // Build aggregated results
     const aggregatedResults = await Promise.all(
-      Array.from(groupedByQuery.entries()).map(async ([queryId, feedbackItems]) => {
+      Object.entries(groupedByQuery).map(async ([queryId, feedbackItems]) => {
         const positive = feedbackItems.filter((f) => f.sentiment === "positive").length;
         const negative = feedbackItems.filter((f) => f.sentiment === "negative").length;
         const neutral = feedbackItems.filter((f) => f.sentiment === "neutral").length;
