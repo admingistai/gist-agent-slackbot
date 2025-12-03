@@ -1,12 +1,6 @@
 {
-  "buildCommand": "",
-  "outputDirectory": "",
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "https://github.com/nicoalbanese/ai-sdk-slackbot"
-    }
-  ],
+  "buildCommand": "cd dashboard && pnpm install && pnpm build",
+  "outputDirectory": "dashboard/dist",
   "functions": {
     "api/events.ts": {
       "maxDuration": 60
@@ -14,5 +8,11 @@
     "api/test-bot.ts": {
       "maxDuration": 60
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
+    }
+  ]
 }
