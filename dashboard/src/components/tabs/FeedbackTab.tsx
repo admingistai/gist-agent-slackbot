@@ -36,9 +36,16 @@ function TableRowSkeleton() {
       <TableCell><Skeleton className="h-4 w-24" /></TableCell>
       <TableCell><Skeleton className="h-6 w-6 rounded" /></TableCell>
       <TableCell><Skeleton className="h-5 w-16 rounded-full" /></TableCell>
-      <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+      <TableCell><Skeleton className="h-4 w-48" /></TableCell>
+      <TableCell><Skeleton className="h-4 w-48" /></TableCell>
     </TableRow>
   )
+}
+
+function truncateText(text: string | undefined, maxLength: number): string {
+  if (!text) return "—"
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength) + "…"
 }
 
 export function FeedbackTab() {
@@ -131,7 +138,8 @@ export function FeedbackTab() {
                 <TableHead>User</TableHead>
                 <TableHead>Reaction</TableHead>
                 <TableHead>Sentiment</TableHead>
-                <TableHead>Comment</TableHead>
+                <TableHead className="min-w-[200px]">Question</TableHead>
+                <TableHead className="min-w-[200px]">Response</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -143,7 +151,7 @@ export function FeedbackTab() {
                 </>
               ) : feedbackList.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-32 text-center">
+                  <TableCell colSpan={6} className="h-32 text-center">
                     <div className="flex flex-col items-center justify-center text-muted-foreground">
                       <MessageSquare className="h-10 w-10 mb-3 opacity-50" />
                       <p className="text-sm">No feedback received yet</p>
@@ -182,8 +190,21 @@ export function FeedbackTab() {
                         {feedback.sentiment}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {feedback.comment || "—"}
+                    <TableCell
+                      className="text-sm text-muted-foreground max-w-[250px]"
+                      title={feedback.question}
+                    >
+                      <span className="block truncate">
+                        {truncateText(feedback.question, 80)}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      className="text-sm text-muted-foreground max-w-[250px]"
+                      title={feedback.response}
+                    >
+                      <span className="block truncate">
+                        {truncateText(feedback.response, 80)}
+                      </span>
                     </TableCell>
                   </TableRow>
                 ))

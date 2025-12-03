@@ -15,6 +15,7 @@ export default defineSchema({
     tools: v.array(v.string()),
     responseTimeMs: v.number(),
     messageContent: v.optional(v.string()),
+    responseContent: v.optional(v.string()),
     timestamp: v.number(),
   })
     .index("by_timestamp", ["timestamp"])

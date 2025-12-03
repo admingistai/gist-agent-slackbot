@@ -56,6 +56,10 @@ export async function handleNewAssistantMessage(
 
   try {
     const messages = await getThread(channel, thread_ts, botUserId);
+    // Get the last user message as the question
+    const lastUserMessage = messages.filter(m => m.role === "user").pop();
+    const userQuestion = lastUserMessage?.content ?? event.text ?? "";
+
     const result = await generateResponseWithMetrics(messages, updateStatus, {
       userId: event.user,
       userName: event.user,
@@ -92,6 +96,8 @@ export async function handleNewAssistantMessage(
         model: result.model,
         tools: result.toolsUsed,
         responseTimeMs: result.responseTimeMs,
+        messageContent: userQuestion,
+        responseContent: result.text,
       }),
       response.ts && convexClient.mutation(api.dashboard.trackBotMessage, {
         messageTs: response.ts,

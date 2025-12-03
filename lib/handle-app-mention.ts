@@ -46,8 +46,13 @@ export async function handleNewAppMention(
 
   try {
     let result;
+    let userQuestion: string;
+
     if (thread_ts) {
       const messages = await getThread(channel, thread_ts, botUserId);
+      // Get the last user message as the question
+      const lastUserMessage = messages.filter(m => m.role === "user").pop();
+      userQuestion = lastUserMessage?.content ?? event.text;
       console.log("Generating response for thread...");
       result = await generateResponseWithMetrics(messages, updateMessage, {
         userId: event.user,
@@ -55,6 +60,7 @@ export async function handleNewAppMention(
         channelId: event.channel,
       });
     } else {
+      userQuestion = event.text;
       console.log("Generating response for new mention...");
       result = await generateResponseWithMetrics(
         [{ role: "user", content: event.text }],
@@ -84,6 +90,8 @@ export async function handleNewAppMention(
         model: result.model,
         tools: result.toolsUsed,
         responseTimeMs: result.responseTimeMs,
+        messageContent: userQuestion,
+        responseContent: result.text,
       }),
       convexClient.mutation(api.dashboard.trackBotMessage, {
         messageTs,

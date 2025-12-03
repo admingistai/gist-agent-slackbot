@@ -174,6 +174,7 @@ export const logQuery = mutation({
     tools: v.array(v.string()),
     responseTimeMs: v.number(),
     messageContent: v.optional(v.string()),
+    responseContent: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     return await ctx.db.insert("queryLogs", {
@@ -226,7 +227,7 @@ export const getFeedbackList = query({
     const limit = args.limit ?? 50;
     const sentiment = args.sentiment ?? "all";
 
-    let feedbackQuery = ctx.db
+    const feedbackQuery = ctx.db
       .query("feedback")
       .withIndex("by_timestamp")
       .order("desc");
@@ -237,18 +238,43 @@ export const getFeedbackList = query({
       ? allFeedback
       : allFeedback.filter((f) => f.sentiment === sentiment);
 
-    return filtered.slice(0, limit).map((f) => ({
-      id: f._id,
-      messageTs: f.messageTs,
-      channelId: f.channelId,
-      userId: f.userId,
-      userName: f.userName,
-      reaction: f.reaction,
-      sentiment: f.sentiment,
-      comment: f.comment,
-      queryId: f.queryId,
-      timestamp: f.timestamp,
-    }));
+    // Look up queryLogs for each feedback to get question/response
+    const feedbackWithContext = await Promise.all(
+      filtered.slice(0, limit).map(async (f) => {
+        let question: string | undefined;
+        let response: string | undefined;
+
+        if (f.queryId) {
+          // Find the queryLog by queryId
+          const queryLog = await ctx.db
+            .query("queryLogs")
+            .filter((q) => q.eq(q.field("queryId"), f.queryId))
+            .first();
+
+          if (queryLog) {
+            question = queryLog.messageContent;
+            response = queryLog.responseContent;
+          }
+        }
+
+        return {
+          id: f._id,
+          messageTs: f.messageTs,
+          channelId: f.channelId,
+          userId: f.userId,
+          userName: f.userName,
+          reaction: f.reaction,
+          sentiment: f.sentiment,
+          comment: f.comment,
+          queryId: f.queryId,
+          timestamp: f.timestamp,
+          question,
+          response,
+        };
+      })
+    );
+
+    return feedbackWithContext;
   },
 });
 
