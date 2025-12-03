@@ -1,5 +1,6 @@
 {
-  "buildCommand": "cd dashboard && npm install && npm run build",
+  "installCommand": "pnpm install && cd dashboard && pnpm install",
+  "buildCommand": "cd dashboard && pnpm run build",
   "outputDirectory": "dashboard/dist",
   "functions": {
     "api/events.ts": {
